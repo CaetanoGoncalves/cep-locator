@@ -1,0 +1,29 @@
+{
+  "name": "cep-locator",
+  "version": "1.0.0",
+  "description": "Busca CEP e coordenadas utilizando ViaCEP e OpenStreetMap",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "CEP",
+    "BRASIL",
+    "GPS",
+    "VIACEP"
+  ],
+  "scripts": {
+    "start": "node ./server.js",
+    "dev": "node --watch ./server.js"
+  },
+  "author": "Caetano Alves Gonçalves",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CaetanoGoncalves/cep-locator"
+  }
+}

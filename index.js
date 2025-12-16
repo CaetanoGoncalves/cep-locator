@@ -135,10 +135,25 @@ class LocatorService
             gps: coords ? { lat: coords.lat, lon: coords.lon } : "Indisponível",
             link_mapa: linkGoogleMaps
         }
-    }   
+    } 
+    distance(lon1, lat1, lon2, lat2)
+    {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * (Math.PI / 180);
+        const dLon = (lon2 - lon1) * (Math.PI / 180);
+        const a = 
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2); 
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+        const distancia = R * c; 
+        return parseFloat(distancia.toFixed(2));
+    }  
 }
 const locator = new LocatorService();
 
 export const cepLocator = async (cep) => {
     return await locator.find(cep);
 };
+export const GpsDistance = (lon1, lat1, lon2, lat2) => {
+    return locator.distance(lon1,lat1,lon2,lat2);
+}

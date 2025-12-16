@@ -1,5 +1,6 @@
 import express from "express";
 import { cepLocator } from "./index.js";
+import { GpsDistance } from "./index.js";
 import cors from 'cors';
 import axios from "axios";
 import 'dotenv/config';
@@ -59,6 +60,55 @@ app.get('/clima/:cidade', async (req, res) => {
         )
     }
 })
+app.get('/escolas/:cep', async (req, res) =>{
+
+    try{let cepRequest = req.params.cep;
+    cepRequest = cepRequest.replace(/\D/g, '');
+    if (cepRequest.length !== 8) {
+        return res.status(400).json({
+            status:"error",
+            erro: "CEP Inválido",
+            mensagem: "O CEP deve conter exatamente 8 números."
+        });
+    }
+    const data = await cepLocator(cepRequest);
+    const lon = data.gps.lon;
+    const lat = data.gps.lat;
+    const url = 'https://overpass-api.de/api/interpreter';
+    const query = `
+            [out:json];
+            (
+              node["amenity"="school"](around:5000, ${lat}, ${lon});
+              way["amenity"="school"](around:5000, ${lat}, ${lon});
+              relation["amenity"="school"](around:5000, ${lat}, ${lon});
+            );
+            out center;
+        `;
+    const response = await axios.get(url, {
+        params: {data:query}
+    });
+    const escolas = response.data.elements.map(item => ({
+            nome: item.tags.name || "Nome indisponivel",
+            tipo: item.tags.amenity,
+            lat: item.lat || item.center.lat,
+            lon: item.lon || item.center.lon,
+            distancia: GpsDistance(lat, lon, item.lat || item.center.lat, item.lon || item.center.lon) + " km"
+        }));
+    res.status(200).json({
+        status:"sucess",
+        centro: {lat, lon},
+        total_encontrado: escolas.length,
+        escolas: escolas
+    })}
+    catch(err){
+        console.error("Erro na busca");
+        res.status(500).json({
+        status:"error",
+        mensage:"erro na busca de escolas",
+        details:err.message
+        });
+    }
+});
 app.listen(PORT, () => {
     console.log(`Servidor rodando em: http://localhost:${PORT}`);
 });

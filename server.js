@@ -9,8 +9,7 @@ app.use(cors());
 const PORT = process.env.PORT;
 
 app.get('/', (req, res) => {
-    res.send('🚀 API de CEP está Online! Use /consulta/SEU_CEP');
-    res.send('API de clima está online, use /clima/cidade');
+    res.send('🚀 API de CEP está Online! Use /consulta/SEU_CEP <br> API de clima está online, use /clima/cidade');
 });
 app.get('/consulta/:cep', async (req, res) => {
     let cepRequest = req.params.cep;

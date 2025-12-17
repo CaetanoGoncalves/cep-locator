@@ -98,7 +98,7 @@ app.get('/escolas/:cep', async (req, res) =>{
         status:"sucess",
         centro: {lat, lon},
         total_encontrado: escolas.length,
-        escolas: escolas
+        escolas: escolas.sort((a,b)=>parseFloat(a.distancia) - parseFloat(b.distancia))
     })}
     catch(err){
         console.error("Erro na busca");
@@ -147,7 +147,7 @@ app.get('/farmacias/:cep', async (req, res) =>{
         status:"sucess",
         centro: {lat, lon},
         total_encontrado: farmacias.length,
-        farmacias: farmacias
+        farmacias: farmacias.sort((a,b)=>parseFloat(a.distancia) - parseFloat(b.distancia))
     })}
     catch(err){
         console.error("Erro na busca");
@@ -196,7 +196,7 @@ app.get('/restaurantes/:cep', async (req, res) =>{
         status:"sucess",
         centro: {lat, lon},
         total_encontrado: restaurantes.length,
-        restaurantes: restaurantes
+        restaurantes: restaurantes.sort((a,b)=>parseFloat(a.distancia) - parseFloat(b.distancia))
     })}
     catch(err){
         console.error("Erro na busca");
